@@ -45,7 +45,19 @@ elif response.status_core == 504:
 
 html_page = BeautifulSoup(response.text, "html.parser")
 
+#names = html_page.find_all("fin-streamer")
+names = html_page.find_all("fin-streamer", {"aria-label": "Volume"})
 
-time.sleep(10)
+#troll = names.find("value")
 
-print(response.text)
+#values = []
+
+#for value in names:
+	
+#	print(value)
+
+print(names)
+
+#time.sleep(10)
+
+
