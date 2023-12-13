@@ -1,4 +1,6 @@
-import requests 
+import requests
+import pymongo
+from pymongo import MongoClient
 from bs4 import BeautifulSoup
 import time
 
@@ -45,19 +47,53 @@ elif response.status_core == 504:
 
 html_page = BeautifulSoup(response.text, "html.parser")
 
-#names = html_page.find_all("fin-streamer")
-names = html_page.find_all("fin-streamer", {"aria-label": "Volume"})
+names = html_page.find_all("td", {"aria-label": "Name"})
+symbols = html_page.find_all("td", {"aria-label": "Symbol"})
+values = html_page.find_all("td", {"aria-label": "Price (Intraday)"})
+changes = html_page.find_all("td", {"aria-label": "Change"})
+volumes = html_page.find_all("td", {"aria-label": "Volume"})
 
-#troll = names.find("value")
+'''for i in range(len(names)):
+    print(names[i].text)
 
-#values = []
+for name in names:	
+        print(name.text)
 
-#for value in names:
-	
-#	print(value)
 
-print(names)
+for price in values:
+        print(price.text)
+
+for symbol in symbols:
+        print(symbol.text)
+
+for change in changes:
+        print(change.text)
+
+for volume in volumes:
+        print(volume.text)
 
 #time.sleep(10)
+'''
+
+'''PYMONGO CODE'''
+
+myclient = MongoClient()
+
+mydb = myclient["jean_database"]
+
+collection = mydb["jean_collection"]
+
+for i in range(25):
+    stock = {
+        "Name": names[i].text,
+        "Symbol": symbols[i].text,
+        "Price (Introday)": values[i].text,
+        "Change": changes[i].text,
+        "Volume": volumes[i].text,
+    }
+
+    x = collection.insert_one(stock)
+
+    print(x.inserted_id)
 
 
